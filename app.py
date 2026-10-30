@@ -1,8 +1,8 @@
+import os
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import gradio as gr
 
-# 1. إنشاء البيانات وتدريب النموذج
 data = {
     'سنوات_الخبرة': [1, 2, 3, 5, 4, 6, 2, 3, 7, 5],
     'يعرف_بايثون': [1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
@@ -15,7 +15,6 @@ y = df['راتب_أعلى_من_80k']
 model = RandomForestClassifier(n_estimators=10, random_state=42)
 model.fit(X, y)
 
-# 2. دالة التوقع
 def predict_salary(experience, knows_python, knows_ml):
     py = 1 if knows_python else 0
     ml = 1 if knows_ml else 0
@@ -32,7 +31,6 @@ def predict_salary(experience, knows_python, knows_ml):
     else:
         return "📉 النتيجة: راتب أقل من 80,000 دولار"
 
-# 3. واجهة التطبيق
 demo = gr.Interface(
     fn=predict_salary,
     inputs=[
@@ -45,5 +43,6 @@ demo = gr.Interface(
     description="أدخل المهارات وسنقوم بتوقع الراتب!"
 )
 
-if __name__ == "__main__":
-    demo.launch()
+# أسطر مهمة جداً لكي يعمل التطبيق على منصة Render
+port = int(os.environ.get("PORT", 7860))
+demo.launch(server_name="0.0.0.0", server_port=port)
